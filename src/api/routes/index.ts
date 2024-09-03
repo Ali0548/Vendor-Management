@@ -6,6 +6,7 @@ import user from './user';
 import task from './task';
 import ftp from './ftp';
 import vendor from './vendor';
+import convert from './convertedFile';
 
 import { Authentication, Authorization } from "@/middlewares";
 import { UserRoles } from "../models/user/enum";
@@ -17,6 +18,9 @@ router.use('/ftp',
     //  Authentication, Authorization([UserRoles.ADMIN, UserRoles.USER]),
   ftp);
 router.use('/vendor', Authentication, Authorization([UserRoles.ADMIN, UserRoles.USER]), vendor);
+router.use('/convert',
+//  Authentication, Authorization([UserRoles.ADMIN, UserRoles.USER]), 
+ convert);
 
 
 
