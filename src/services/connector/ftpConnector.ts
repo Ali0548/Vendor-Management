@@ -9,6 +9,14 @@ export const connectFtp = (ftpConfig: IFtp): Promise<void> => {
     client = new ftp();
 
     return new Promise((resolve, reject) => {
+        client.connect({
+            // host: "peachpuff-sparrow-800223.hostingersite.com",
+            // user: "u490611197.devadmin",
+            // password: "@Devadmin2024@",
+            host:"ftp.fitwellhub.com",
+            user:"u401759985.admin",
+            password:">6466_Zk!}",
+        });
         client.on('ready', () => {
             console.log('FTP connection established.');
             resolve();
@@ -19,11 +27,6 @@ export const connectFtp = (ftpConfig: IFtp): Promise<void> => {
             reject(err);
         });
 
-        client.connect({
-            host: "ftp://peachpuff-sparrow-800223.hostingersite.com",
-            user: "u490611197.devadmin",
-            password: "@Devadmin2024@",
-        });
     });
 };
 

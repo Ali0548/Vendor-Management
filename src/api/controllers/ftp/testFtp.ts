@@ -8,7 +8,6 @@ import { AuthenticatedRequest } from "@/middlewares/types";
 export const ftpTest = async (req: AuthenticatedRequest, res: Response) => {
 
     console.log('FTP test');
-    console.log('Request:', req.body);
     
     const ftpId = req.params.id;
     console.log('FTP ID:', ftpId);
@@ -24,10 +23,10 @@ export const ftpTest = async (req: AuthenticatedRequest, res: Response) => {
         const connection = await connectFtp(ftpConfig);
         console.log('FTP connection:', connection);
         const files = await listFiles('/');
-        console.log('Files:', files);
+        // console.log('Files:', files);
 
-        // await downloadFile('/remote/path/file.txt', './local/path/file.txt');
-        // await uploadFile('./local/path/file.txt', '/remote/path/file.txt');
+        const downloadedFile = await downloadFile('./ftp-test/products_export_1.csv', './Desktop'); 
+        console.log('Downloaded file:', downloadedFile);
     } catch (error) {
         console.error('FTP operation failed:', error);
     } finally {
