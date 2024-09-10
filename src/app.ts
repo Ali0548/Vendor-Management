@@ -11,6 +11,7 @@ import cron from 'node-cron';
 import { closeFtpConnection, connectFtp, downloadFile } from './services/connector/ftpConnector';
 import path from 'path';
 import os from 'os';
+import cronService from './services/cronService/cronService';
 
 const app = express();
 dotenv.config();
@@ -51,6 +52,21 @@ app.use((err: ErrorRequestHandler, req: Request, res: Response, next: NextFuncti
 //         closeFtpConnection();
 //     }
 // });
+
+
+cron.schedule('0 0 * * *',
+    async () => {
+        const pendingCrons = await cronService.getRecentPendingCrons(new Date());
+        console.log('Pending crons:', pendingCrons);
+        for (const cronJob of pendingCrons) {
+            await cronService.processCronJob(cronJob);
+        }
+    },
+    {
+        scheduled: true,
+        runOnInit: true,
+    }
+);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

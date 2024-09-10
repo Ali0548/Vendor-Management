@@ -2,6 +2,7 @@ import { FtpInput } from './types';
 import { IError } from '@/utils/CustomError';
 import Ftp from '@/api/models/ftp/ftp';
 import { IFtp } from '@/api/models/ftp/types';
+import { closeFtpConnection, connectFtp, downloadFile } from '../connector/ftpConnector';
 
 export const findFtpById = async (id: string): Promise<IFtp | null> => {
     const FtpData = await Ftp.findById(id).lean();

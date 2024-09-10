@@ -7,6 +7,7 @@ import task from './task';
 import ftp from './ftp';
 import vendor from './vendor';
 import convert from './convertedFile';
+import cron from './cron'
 
 import { Authentication, Authorization } from "@/middlewares";
 import { UserRoles } from "../models/user/enum";
@@ -21,6 +22,10 @@ router.use('/vendor', Authentication, Authorization([UserRoles.ADMIN, UserRoles.
 router.use('/convert',
 //  Authentication, Authorization([UserRoles.ADMIN, UserRoles.USER]), 
  convert);
+
+ router.use('/cron',
+  //  Authentication, Authorization([UserRoles.ADMIN, UserRoles.USER]), 
+  cron)
 
 
 

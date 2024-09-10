@@ -2,9 +2,10 @@ import Cron from '@/api/models/cronJobs/cron';
 import { CronStatus } from '@/api/models/cronJobs/enums';
 import { ICron } from '@/api/models/cronJobs/types';
 import mongoose from 'mongoose';
+import { downloadFileFromFtp } from '../file/file';
 
 export class CronService {
-  async createCron(ftpId: mongoose.Types.ObjectId, operations: string[], schedule: string, createdBy: mongoose.Types.ObjectId): Promise<ICron> {
+  async createCron(ftpId: mongoose.Types.ObjectId, operations: string[], schedule: string, createdBy?: mongoose.Types.ObjectId): Promise<ICron> {
     const nextRun = this.getNextRunTime(schedule);
     
     const cronJob = new Cron({
@@ -13,7 +14,7 @@ export class CronService {
       schedule,
       status: CronStatus.PENDING,
       nextRun,
-      createdBy,
+      // createdBy,
     });
 
     return await cronJob.save();
@@ -21,6 +22,10 @@ export class CronService {
 
   async getCronsByFtp(ftpId: mongoose.Types.ObjectId): Promise<ICron[]> {
     return await Cron.find({ ftp: ftpId }).populate('ftp').exec();
+  }
+
+  async getAllCrons(): Promise<ICron[]> {
+    return await Cron.find().populate('ftp').exec();
   }
 
   async updateCronStatus(cronId: mongoose.Types.ObjectId, status: CronStatus, lastRun?: Date): Promise<ICron | null> {
@@ -43,6 +48,31 @@ export class CronService {
     // Logic to calculate the next run time based on the schedule
     const nextRunDate = new Date(); 
     return nextRunDate;
+  }
+
+  async getRecentPendingCrons(givenTime: Date): Promise<ICron[]> {
+    const fifteenMinutesBefore = new Date(givenTime.getTime() - 15 * 60 * 1000);
+    try {
+      const crons = await Cron.find({
+        status: CronStatus.PENDING,
+        nextRun: {
+          $gte: fifteenMinutesBefore,
+          $lte: givenTime,
+        },
+      }).exec();
+
+      return crons;
+    } catch (error) {
+      console.error('Error fetching recent pending crons:', error);
+      throw error;
+    }
+  }
+
+  async processCronJob(cronJob: ICron): Promise<void> {
+    if (cronJob.operations.includes('download')) {
+      console.log('Downloading file from ftp:', cronJob.ftp);
+      await downloadFileFromFtp(cronJob?.ftp.toString());
+    }
   }
 }
 

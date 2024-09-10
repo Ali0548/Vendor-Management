@@ -34,7 +34,7 @@ const cronSchema = new Schema<ICron>({
   createdBy: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    // required: true,
   },
 }, {
   timestamps: true,

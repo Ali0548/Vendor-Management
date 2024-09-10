@@ -6,8 +6,10 @@ export class CronController {
   async createCron(req: Request, res: Response): Promise<Response> {
     try {
       const { ftpId, operations, schedule } = req.body;
-      const createdBy = req?.body?.user?._id;
-      const cronJob = await cronService.createCron(new mongoose.Types.ObjectId(ftpId), operations, schedule, createdBy);
+      // const createdBy = req?.body?.user?._id;
+      const cronJob = await cronService.createCron(new mongoose.Types.ObjectId(ftpId), operations, schedule
+      // ,createdBy
+      );
       return res.status(201).json(cronJob);
     } catch (error) {
       return res.status(500).json({ error: error.message });
