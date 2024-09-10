@@ -7,13 +7,16 @@ import { json } from 'body-parser';
 import routes from './api/routes';
 import errorHandler from './middlewares/validation/errorHandler';
 import dbConnector from './config/database';
+import cron from 'node-cron';
+import { closeFtpConnection, connectFtp, downloadFile } from './services/connector/ftpConnector';
+import path from 'path';
+import os from 'os';
 
 const app = express();
 dotenv.config();
 
 const port = process.env.PORT;
 
-// Restrict the size of the request body to 50mb
 app.use(json({ limit: '50mb' }));
 
 
@@ -23,21 +26,31 @@ app.use(cors({ origin: true, credentials: true }));
 
 app.use(helmet());
 
-// Connecting to db, --> we can use this after node server is up and running
 dbConnector();
 
 app.get('/', (req: Request, res: Response) => { res.send('Welcome to Vendor-Management.') });
 
 app.use('/api/v1', routes);
 
-// We are using this middleware to handle any kind of validation error of in-coming request
 app.use((err: ErrorRequestHandler, req: Request, res: Response, next: NextFunction) => {
     if (isCelebrateError(err)) {
         return errorHandler(err, req, res, next);
     }
 });
 
-
+// cron.schedule('0 0 * * *',async () => {  // todo: use this to kick-of other cron jobs
+//     console.log('Cron job running at midnight (every 24 hours)');
+//     try {
+//         const connection = await connectFtp();
+//         console.log('FTP connection:', connection);
+//         const desktopPath = path.join(os.homedir(), 'Desktop', 'downloaded_file.csv');
+//         await downloadFile('./ftp-test/products_export_1.csv', desktopPath);
+//     } catch (error) {
+//         console.error('FTP operation failed:', error);
+//     } finally {
+//         closeFtpConnection();
+//     }
+// });
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

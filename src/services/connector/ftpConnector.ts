@@ -5,7 +5,7 @@ import { IFtp } from '@/api/models/ftp/types';
 
 let client: Client;
 
-export const connectFtp = (ftpConfig: IFtp): Promise<void> => {
+export const connectFtp = (ftpConfig?: IFtp): Promise<void> => {
     client = new ftp();
 
     return new Promise((resolve, reject) => {

@@ -4,6 +4,8 @@ import { ApiResponse } from "@/shared";
 import { Response } from "express";
 import _ from "lodash";
 import { AuthenticatedRequest } from "@/middlewares/types";
+import path from 'path';
+import os from 'os';
 
 export const ftpTest = async (req: AuthenticatedRequest, res: Response) => {
 
@@ -22,15 +24,15 @@ export const ftpTest = async (req: AuthenticatedRequest, res: Response) => {
     try {
         const connection = await connectFtp(ftpConfig);
         console.log('FTP connection:', connection);
-        const files = await listFiles('/');
-        // console.log('Files:', files);
 
-        const downloadedFile = await downloadFile('./ftp-test/products_export_1.csv', './Desktop'); 
+        const desktopPath = path.join(os.homedir(), 'Desktop', 'downloaded_file.csv');
+        const downloadedFile = await downloadFile('./ftp-test/products_export_1.csv', desktopPath); 
         console.log('Downloaded file:', downloadedFile);
     } catch (error) {
         console.error('FTP operation failed:', error);
     } finally {
         closeFtpConnection();
     }
+
     return ApiResponse(true, "test", {}, 201, res);
 };
