@@ -31,11 +31,7 @@ const cronSchema = new Schema<ICron>({
     type: Date,
     required: true,
   },
-  createdBy: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    // required: true,
-  },
+ 
 }, {
   timestamps: true,
 });
