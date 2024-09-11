@@ -37,7 +37,7 @@ export class CronService {
       cronId,
       { status, lastRun, nextRun: this.getNextRunTime(cronJob.schedule) },
       { new: true }
-    );
+    )
   }
 
   async deleteCron(cronId: mongoose.Types.ObjectId): Promise<void> {
@@ -45,8 +45,7 @@ export class CronService {
   }
 
   getNextRunTime(schedule: string): Date {
-    // Logic to calculate the next run time based on the schedule
-    const nextRunDate = new Date(); 
+    const nextRunDate = new Date(schedule); 
     return nextRunDate;
   }
 
@@ -71,7 +70,7 @@ export class CronService {
   async processCronJob(cronJob: ICron): Promise<void> {
     if (cronJob.operations.includes('download')) {
       console.log('Downloading file from ftp:', cronJob.ftp);
-      await downloadFileFromFtp(cronJob?.ftp.toString());
+      await downloadFileFromFtp(cronJob);
     }
   }
 }

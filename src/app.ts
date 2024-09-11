@@ -54,17 +54,31 @@ app.use((err: ErrorRequestHandler, req: Request, res: Response, next: NextFuncti
 // });
 
 
-cron.schedule('0 0 * * *',
+// cron.schedule('*/15 * * * *',
+//     async () => {
+//         const pendingCrons = await cronService.getRecentPendingCrons(new Date());
+//         console.log('Pending crons:', pendingCrons);
+//         for (const cronJob of pendingCrons) {
+//             await cronService.processCronJob(cronJob);
+//         }
+//     },
+//     {
+//         scheduled: true,
+//         runOnInit: true,
+//     }
+// );
+
+cron.schedule('* * * * *',
     async () => {
         const pendingCrons = await cronService.getRecentPendingCrons(new Date());
-        console.log('Pending crons:', pendingCrons);
+        console.log('Pending crons:', pendingCrons.map(cron => cron._id));
         for (const cronJob of pendingCrons) {
             await cronService.processCronJob(cronJob);
         }
     },
     {
         scheduled: true,
-        runOnInit: true,
+        // runOnInit: true,
     }
 );
 
