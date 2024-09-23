@@ -6,5 +6,5 @@ import { getAllVendor as getAll } from "@/services/vendor/vendor";
 
 export const getAllVendor = async (req: Request, res: Response) => {
    const allVendor = await getAll();
-    return ApiResponse(true, "All Vendor GET Successfully", allVendor, 200, res);
+    return ApiResponse(true, "All Members GET Successfully", allVendor, 200, res);
 };

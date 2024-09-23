@@ -26,7 +26,7 @@ export const AddVendor = async (req: AuthenticatedRequest, res: Response) => {
         console.log('ftpData', ftpData);
         ftps = await createFtpInBulk(ftpData);
     } else {
-        throw new Error('Vendor not created');
+        throw new Error('Member not created');
     }
-    return ApiResponse(true, "New Vendor Added Successfully", {addNewVendor, ftps}, 201, res);
+    return ApiResponse(true, "New Member Added Successfully", {addNewVendor, ftps}, 201, res);
 };

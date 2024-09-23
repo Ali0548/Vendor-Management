@@ -21,5 +21,5 @@ export const UpdateUser = async (req: AuthenticatedRequest, res: Response) => {
    } as UserInput
    const updatedUser = await updateUser(id, userToUpdate);
    const updateFTP = await bulkUpdate(user?.ftps, updatedUser?._id as string, req?.user?.id as string)
-   return ApiResponse(true, "Vendor Updated Successfully", {updatedUser, updateFTP}, 201, res);
+   return ApiResponse(true, "Member Updated Successfully", {updatedUser, updateFTP}, 201, res);
 };

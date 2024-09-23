@@ -3,6 +3,7 @@ import User from '@/api/models/user/user';
 import { UserInput } from './types';
 import { IUser } from '@/api/models/user/type';
 import { IError } from '@/utils/CustomError';
+import Ftp from '@/api/models/ftp/ftp';
 
 export const findByEmail = async (email: string): Promise<IUser | null> => {
     const user = await User.findOne({ email }).lean();
@@ -46,7 +47,11 @@ export const deleteUser = async (id: string): Promise<IUser | null> => {
     if (!checkUser) {
         throw new Error('User not found');
     }
-    await User.findByIdAndDelete(id);
+    const vendor = await User.findByIdAndDelete(id);
+    if(!vendor){
+        throw new IError('Vendor not found', 404);
+    }
+    await Ftp.deleteMany({ user: id });
     return checkUser;
 }
 
